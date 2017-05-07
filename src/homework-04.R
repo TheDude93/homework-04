@@ -98,7 +98,8 @@ ggplot(hiphop_cand_lyrics,
     stat = "count",
     width = 1,
     colour = "grey60",
-    show.legend = F) +
+    show.legend = F
+  ) +
   scale_fill_manual(
     values = cvpalett,
     breaks = c(
@@ -204,12 +205,10 @@ ggplot(
 
 # IV. Feladat
 # 1. részfeladat
-ggplot(
-  transform(tweets, text_sentiment = factor(
-    text_sentiment, levels = c("positive", "negative", "neutral")
-  )),
-  aes(text_sentiment, fill = text_emotion)
-) +
+ggplot(transform(tweets, text_sentiment = factor(
+  text_sentiment, levels = c("positive", "negative", "neutral")
+)),
+aes(text_sentiment, fill = text_emotion)) +
   geom_bar() +
   geom_bar(
     stat = "count",
@@ -225,27 +224,30 @@ ggplot(
     axis.title = element_blank(),
     legend.box = "horizontal"
   ) +
-  scale_fill_brewer(palette = "Set1")+
+  scale_fill_brewer(palette = "Set1") +
   ggtitle("Sentiment & emotion of tweets")
 
 # IV/2. feladat
-trump_source <- tweets[((tweets$source_url == "http://twitter.com/download/iphone") |
-                         (tweets$source_url == "http://twitter.com/download/android") &
-                         (tweets$handle == "realDonaldTrump")), ]
+trump_source <-
+  tweets[((tweets$source_url == "http://twitter.com/download/iphone") |
+            (tweets$source_url == "http://twitter.com/download/android") &
+            (tweets$handle == "realDonaldTrump")
+  ),]
 
 levels(trump_source$source_url)
-trump_source$source_url <- droplevels(trump_source$source_url, "http://instagram.com",                        
-           "http://twitter.com" ,                         
-           "http://twitter.com/#!/download/ipad"  ,       
-                    
-           "https://about.twitter.com/products/tweetdeck",
-           "https://mobile.twitter.com"         ,         
-           "https://studio.twitter.com")
+trump_source$source_url <-
+  droplevels(
+    trump_source$source_url,
+    "http://instagram.com",
+    "http://twitter.com" ,
+    "http://twitter.com/#!/download/ipad"  ,
+    "https://about.twitter.com/products/tweetdeck",
+    "https://mobile.twitter.com"         ,
+    "https://studio.twitter.com"
+  )
 levels(trump_source$source_url) <- c("Android", "iPhone")
-ggplot(
-  trump_source,
-  aes(text_sentiment, fill = text_emotion)
-) +
+ggplot(trump_source,
+       aes(text_sentiment, fill = text_emotion)) +
   geom_bar() +
   geom_bar(
     stat = "count",
@@ -261,5 +263,11 @@ ggplot(
     axis.title = element_blank(),
     legend.box = "horizontal"
   ) +
-  scale_fill_brewer(palette = "Set1")+
+  scale_fill_brewer(palette = "Set1") +
   ggtitle("Sentiment & emotion of tweets")
+
+?t.test()
+t.test(table(trump_source[trump_source$source_url == "Android",
+                          c("text_emotion", "text_sentiment")]),
+       table(trump_source[trump_source$source_url == "iPhone" ,
+                          c("text_emotion", "text_sentiment")]), paired = T)
